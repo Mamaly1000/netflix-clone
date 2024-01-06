@@ -1,6 +1,20 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
+import ToasrProvider from "@/providers/ToasrProvider";
+import "@/styles/globals.css";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import Head from "next/head";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
+  return (
+    <SessionProvider session={session}>
+      <Head aria-description="wellcome to netflix">
+        <title>NetFlix</title>
+      </Head>
+      <ToasrProvider />
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
 }

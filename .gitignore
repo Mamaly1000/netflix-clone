@@ -8,11 +8,11 @@
 
 # testing
 /coverage
-
+pass.txt
 # next.js
 /.next/
 /out/
-
+.env
 # production
 /build
 

@@ -25,3 +25,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+body {
+  @apply bg-zinc-900 h-full overflow-x-hidden;
+}
+#__next,
+html {
+  @apply h-full scroll-smooth transition-all relative;
+}
