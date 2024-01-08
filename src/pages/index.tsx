@@ -1,11 +1,9 @@
-import { Inter } from "next/font/google";
 import { NextPageContext } from "next";
-import { getSession, signOut } from "next-auth/react";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { User } from "@prisma/client";
+import { getSession } from "next-auth/react";
 import Navbar from "@/components/navbar/Navbar";
-
-const inter = Inter({ subsets: ["latin"] });
+import Billboard from "@/components/ui/Billboard";
+import MovieList from "@/components/lists/MovieList";
+import useMovies from "@/hooks/useMovies";
 
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const session = await getSession(ctx);
@@ -24,10 +22,12 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
 };
 
 export default function Home() {
-  const { user } = useCurrentUser();
+  const { movies } = useMovies();
   return (
-    <div className=" ">
+    <>
       <Navbar />
-    </div>
+      <Billboard />
+      <MovieList data={movies || []} title="Movies" />
+    </>
   );
 }

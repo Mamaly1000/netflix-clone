@@ -11,7 +11,7 @@ const NavbarItem = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge("text-white cursor-pointer", className)} onClick={onClick}>
+    <div className={twMerge("text-white cursor-pointer capitalize", className)} onClick={onClick}>
       {label}
     </div>
   );
