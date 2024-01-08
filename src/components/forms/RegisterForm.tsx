@@ -6,9 +6,11 @@ import Input from "../inputs/Input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import { NextPageContext } from "next";
+
 const registerSchema = z.object({
   name: z
     .string({
@@ -38,6 +40,24 @@ const loginSchema = z.object({
     })
     .min(6, "minimum character is 6"),
 });
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/profiles",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
+
 const RegisterForm = () => {
   const router = useRouter();
 
@@ -71,7 +91,7 @@ const RegisterForm = () => {
         setloading(true);
         await axios.post("/api/register", values).then((res) => {
           toast.success(res.data.message);
-          form.reset();
+          login();
         });
       } catch (error: any) {
         console.log(error);
@@ -92,12 +112,9 @@ const RegisterForm = () => {
         await signIn("credentials", {
           email: values.email,
           password: values.password,
-          redirect: false,
-          callbackUrl: "/",
+          callbackUrl: "/profiles",
         });
         toast.success("wellcome back");
-        form.reset();
-        router.push("/");
       } catch (error) {
         console.log(error);
         toast.error("something went wrong!");
@@ -158,13 +175,13 @@ const RegisterForm = () => {
       </button>
       <div className="flex flex-row items-center gap-4 mt-8 justify-center">
         <div
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={() => signIn("google", { callbackUrl: "/profiles" })}
           className="w-10 h-10 border-[1px] border-transparent hover:border-red-600   rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
         >
           <FcGoogle size={32} />
         </div>
         <div
-          onClick={() => signIn("github", { callbackUrl: "/" })}
+          onClick={() => signIn("github", { callbackUrl: "/profiles" })}
           className="w-10 h-10 border-[1px] border-transparent hover:border-red-600   rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
         >
           <FaGithub size={32} />
