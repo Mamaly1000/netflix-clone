@@ -30,7 +30,7 @@ export default async function handler(
           email: user.email || "",
         },
         data: {
-          favoriteIds: {
+          favoriteMovies: {
             push: movieId,
           },
         },
@@ -56,14 +56,14 @@ export default async function handler(
         throw new Error("Invalid ID");
       }
 
-      const updatedFavoriteIds = without(user.favoriteIds, movieId);
+      const updatedFavoriteMovies = without(user.favoriteMovies, movieId);
 
       const updatedUser = await prisma.user.update({
         where: {
           email: user.email || "",
         },
         data: {
-          favoriteIds: updatedFavoriteIds,
+          favoriteMovies: updatedFavoriteMovies,
         },
       });
 

@@ -15,13 +15,16 @@ model User {
   name String
   image String?
   email String? @unique
-  emailVerified DateTime?
   hashedPassword String?
+  emailVerified DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   sessions Session[]
   accounts Account[]
-  favoriteIds String[] @db.ObjectId
+  hasNotification Boolean?
+  favoriteMovies String[] @db.ObjectId
+  favoriteSeries String[] @db.ObjectId
+  favoriteNews String[] @db.ObjectId
 }
 
 model Account {
@@ -68,4 +71,46 @@ model Movie {
   thumbnailUrl String
   genre String
   duration String
+}
+model series {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  videoUrl String
+  thumbnailUrl String
+  genre String
+  duration String
+  seasons Int 
+  epizodes Int
+}
+
+model Actor{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  age Int 
+  married String?
+  movieIds String[] @db.ObjectId
+  seriesIds String[] @db.ObjectId
+}
+model News{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime @updatedAt
+  coverImage String 
+  authorName String
+  authorEmail String
+  authorProfilePic String
+  tags String[]
+}
+
+model UpcomingProduct{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String 
+  description String
+  releaseDate DateTime
+  image String
+  genre String
+  duration String 
 }

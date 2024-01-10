@@ -13,7 +13,12 @@ const useFavorites = () => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
-  return { favorites: favorites as Movie[] | null, error, isLoading, mutate };
+  return {
+    favorites: favorites as { favoriteMovies: Movie[] } | null,
+    error,
+    isLoading,
+    mutate,
+  };
 };
 
 export default useFavorites;

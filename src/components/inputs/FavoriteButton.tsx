@@ -11,7 +11,7 @@ const FavoriteButton = ({ movieId }: { movieId?: string }) => {
   const { mutate: favoritesMutate } = useFavorites();
   const [isLoading, setloading] = useState(false);
   const isFavorite = useMemo(() => {
-    const list = movieId ? user?.favoriteIds.includes(movieId) : false;
+    const list = movieId ? user?.favoriteMovies.includes(movieId) : false;
     return list;
   }, [user, movieId]);
 

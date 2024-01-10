@@ -18,12 +18,19 @@ export default async function handler(
     const favoriteMovies = await prisma.movie.findMany({
       where: {
         id: {
-          in: currentUser.user.favoriteIds,
+          in: currentUser.user.favoriteMovies,
+        },
+      },
+    });
+    const favoriteSeries = await prisma.series.findMany({
+      where: {
+        id: {
+          in: currentUser.user.favoriteSeries,
         },
       },
     });
 
-    return res.status(200).json(favoriteMovies);
+    return res.status(200).json({ favoriteMovies, favoriteSeries });
   } catch (error) {
     return res
       .status(500)

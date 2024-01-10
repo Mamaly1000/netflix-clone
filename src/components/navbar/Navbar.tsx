@@ -12,11 +12,14 @@ import logo from "@/public/images/logo.png";
 import blue from "@/public/images/default-blue.png";
 import { IoLogOut } from "react-icons/io5";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
+import InfoModal from "../modals/InfoModal";
+import { useProfileModal } from "@/hooks/useProfileModal";
 
 const TOP_OFFSET = 66;
 
 const Navbar = () => {
   const { user } = useCurrentUser();
+  const profileModal = useProfileModal();
 
   const [showBg, setShowBg] = useState(false);
   const [displayNavbarMenu, setDisplayNavbarMenu] = useState(false);
@@ -140,7 +143,10 @@ const Navbar = () => {
               setClose={() => setDisplayAccountMenu(false)}
             >
               <div className="flex flex-col gap-3">
-                <div className="px-3 group/item flex flex-row gap-3 items-center w-full">
+                <div
+                  onClick={() => profileModal.onOpen()}
+                  className="px-3 group/item flex flex-row gap-3 items-center w-full"
+                >
                   <Image
                     width={32}
                     height={32}

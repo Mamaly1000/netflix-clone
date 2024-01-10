@@ -1,11 +1,14 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const Modal = ({
   children,
   isVisible,
   onClose,
+  disable = false,
 }: {
+  disable?: boolean;
   onClose: () => void;
   isVisible: boolean;
   children: ReactNode;
@@ -17,6 +20,10 @@ const Modal = ({
   }, [isVisible]);
 
   const handleClose = useCallback(() => {
+    if (disable) {
+      toast.error("please wait!");
+      return null;
+    }
     setVisible(false);
     setTimeout(() => {
       onClose();

@@ -10,6 +10,7 @@ const nextConfig = {
         hostname: "uhdtv.io",
       },
       { hostname: "upload.wikimedia.org" },
+      { hostname: "res.cloudinary.com" },
     ],
   },
 };

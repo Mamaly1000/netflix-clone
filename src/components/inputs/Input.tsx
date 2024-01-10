@@ -7,7 +7,6 @@ const Input = ({
   register,
   onChange,
   label,
-  placeholder,
   className,
   type = "text",
   disabled = false,
@@ -18,14 +17,13 @@ const Input = ({
   register: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
-  placeholder?: string;
   className?: string;
   type?: string;
 }) => {
   return (
     <div
       className={twMerge(
-        "relative transition-all",
+        "relative transition-all min-w-full",
         disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
       )}
     >
@@ -41,6 +39,7 @@ const Input = ({
           "block rounded-md focus:border-red-600 border-[1px] border-neutral-700 transition-all px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1 invalid:border-red-600 disabled:cursor-not-allowed",
           className
         )}
+        autoComplete=" "
         disabled={disabled}
       />
 
