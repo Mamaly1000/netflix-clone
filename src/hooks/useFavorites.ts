@@ -1,5 +1,5 @@
 import fetcher from "@/libs/fetcher";
-import { Movie } from "@prisma/client";
+import { Movie, series } from "@prisma/client";
 import useSWR from "swr";
 
 const useFavorites = () => {
@@ -14,7 +14,10 @@ const useFavorites = () => {
     revalidateOnReconnect: false,
   });
   return {
-    favorites: favorites as { favoriteMovies: Movie[] } | null,
+    favorites: favorites as {
+      favoriteMovies: Movie[];
+      favoriteSeries: series[];
+    } | null,
     error,
     isLoading,
     mutate,

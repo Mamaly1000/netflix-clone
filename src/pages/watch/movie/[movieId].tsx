@@ -25,18 +25,7 @@ const SingleMoviePage = () => {
         poster={movie?.thumbnailUrl}
         controls
         src={movie?.videoUrl}
-      >
-        <source src={movie?.videoUrl} type="video/mp4"></source>
-        <iframe
-          width="560"
-          height="315"
-          src={movie?.videoUrl}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
-      </video>
+      ></video>
     </div>
   );
 };

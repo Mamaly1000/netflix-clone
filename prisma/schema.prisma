@@ -22,9 +22,10 @@ model User {
   sessions Session[]
   accounts Account[]
   hasNotification Boolean?
+  IsAdmin Boolean?
   favoriteMovies String[] @db.ObjectId
   favoriteSeries String[] @db.ObjectId
-  favoriteNews String[] @db.ObjectId
+  favoriteNews String[] @db.ObjectId 
 }
 
 model Account {
@@ -71,7 +72,8 @@ model Movie {
   thumbnailUrl String
   genre String
   duration String
-}
+  cast String[] @db.ObjectId
+ }
 model series {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
@@ -82,12 +84,14 @@ model series {
   duration String
   seasons Int 
   epizodes Int
+  cast String[] @db.ObjectId
 }
 
 model Actor{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   age Int 
+  image String?
   married String?
   movieIds String[] @db.ObjectId
   seriesIds String[] @db.ObjectId
@@ -113,4 +117,12 @@ model UpcomingProduct{
   image String
   genre String
   duration String 
+}
+model Admin {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId @unique
+  createdAt DateTime  @default(now())
+  expireAt  DateTime?
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
 }

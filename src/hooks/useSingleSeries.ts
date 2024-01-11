@@ -1,4 +1,5 @@
 import fetcher from "@/libs/fetcher";
+import { series } from "@prisma/client";
 import React from "react";
 import useSWR from "swr";
 
@@ -14,7 +15,7 @@ const useSingleSeries = (seriesId?: string) => {
     revalidateOnReconnect: false,
     revalidateIfStale: false,
   });
-  return { series, error, isLoading, mutate };
+  return { series: series as series | null, error, isLoading, mutate };
 };
 
 export default useSingleSeries;

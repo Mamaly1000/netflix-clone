@@ -8,6 +8,8 @@ import useFavorites from "@/hooks/useFavorites";
 import InfoModal from "@/components/modals/InfoModal";
 import ProfileModal from "@/components/modals/ProfileModal";
 import useSeries from "@/hooks/useSeries";
+import SeriesList from "@/components/lists/SeriesList";
+import SeriesInfoModal from "@/components/modals/SeriesInfoModal";
 
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const session = await getSession(ctx);
@@ -33,11 +35,19 @@ export default function Home() {
     <>
       <InfoModal />
       <ProfileModal />
+      <SeriesInfoModal />
       <Navbar />
       <Billboard />
-      <MovieList data={movies || []} title="Trending now" />
-      <MovieList data={series || []} title="Trending now" />
-      <MovieList data={favorites?.favoriteMovies || []} title="Favorites" />
+      <MovieList data={movies || []} title="Trending Movies" />
+      <SeriesList data={series || []} title="Trending Series" />
+      <MovieList
+        data={favorites?.favoriteMovies || []}
+        title="Favorite movies"
+      />
+      <SeriesList
+        data={favorites?.favoriteSeries || []}
+        title="Favorite series"
+      />
     </>
   );
 }

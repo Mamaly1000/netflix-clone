@@ -13,61 +13,119 @@ export default async function handler(
     if (req.method === "POST") {
       const { user } = await serverAuth(req, res);
 
-      const { movieId } = req.body;
-
-      const existingMovie = await prisma.movie.findUnique({
-        where: {
-          id: movieId,
-        },
-      });
-
-      if (!existingMovie) {
-        throw new Error("Invalid ID");
-      }
-
-      const updatedUser = await prisma.user.update({
-        where: {
-          email: user.email || "",
-        },
-        data: {
-          favoriteMovies: {
-            push: movieId,
+      const { id, type } = req.body;
+      if (type === "movie") {
+        const existingMovie = await prisma.movie.findUnique({
+          where: {
+            id,
           },
-        },
-      });
+        });
 
-      return res
-        .status(200)
-        .json({ message: "thanks for your like", user: updatedUser });
+        if (!existingMovie) {
+          throw new Error("Invalid ID");
+        }
+
+        const updatedUser = await prisma.user.update({
+          where: {
+            email: user.email || "",
+          },
+          data: {
+            favoriteMovies: {
+              push: id,
+            },
+          },
+        });
+
+        return res
+          .status(200)
+          .json({ message: "thanks for your like", user: updatedUser });
+      }
+      if (type === "series") {
+        const existingSeries = await prisma.series.findUnique({
+          where: {
+            id,
+          },
+        });
+
+        if (!existingSeries) {
+          throw new Error("Invalid ID");
+        }
+
+        const updatedUser = await prisma.user.update({
+          where: {
+            email: user.email || "",
+          },
+          data: {
+            favoriteSeries: {
+              push: id,
+            },
+          },
+        });
+
+        return res
+          .status(200)
+          .json({ message: "thanks for your like", user: updatedUser });
+      }
     }
 
     if (req.method === "DELETE") {
       const { user } = await serverAuth(req, res);
 
-      const { movieId } = req.body;
+      const { id, type } = req.body;
 
-      const existingMovie = await prisma.movie.findUnique({
-        where: {
-          id: movieId,
-        },
-      });
+      if (type === "movie") {
+        const existingMovie = await prisma.movie.findUnique({
+          where: {
+            id,
+          },
+        });
 
-      if (!existingMovie) {
-        throw new Error("Invalid ID");
+        if (!existingMovie) {
+          throw new Error("Invalid ID");
+        }
+
+        const updatedFavoriteMovies = without(user.favoriteMovies, id);
+
+        const updatedUser = await prisma.user.update({
+          where: {
+            email: user.email || "",
+          },
+          data: {
+            favoriteMovies: updatedFavoriteMovies,
+          },
+        });
+
+        return res
+          .status(200)
+          .json({ message: "Disliked!", user: updatedUser });
       }
 
-      const updatedFavoriteMovies = without(user.favoriteMovies, movieId);
+      if (type === "series") {
+        const existingSeries = await prisma.series.findUnique({
+          where: {
+            id,
+          },
+        });
 
-      const updatedUser = await prisma.user.update({
-        where: {
-          email: user.email || "",
-        },
-        data: {
-          favoriteMovies: updatedFavoriteMovies,
-        },
-      });
+        if (!existingSeries) {
+          throw new Error("Invalid ID");
+        }
 
-      return res.status(200).json({ message: "Disliked!", user: updatedUser });
+        const updatedFavoriteMovies = without(user.favoriteSeries, id);
+
+        const updatedUser = await prisma.user.update({
+          where: {
+            email: user.email || "",
+          },
+          data: {
+            favoriteSeries: updatedFavoriteMovies,
+          },
+        });
+
+        return res
+          .status(200)
+          .json({ message: "Disliked!", user: updatedUser });
+      }
     }
 
     return res.status(405).end();

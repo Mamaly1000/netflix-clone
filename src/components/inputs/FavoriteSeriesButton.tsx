@@ -6,14 +6,14 @@ import React, { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
-const FavoriteButton = ({ movieId }: { movieId?: string }) => {
+const FavoriteSeriesButton = ({ seriesId }: { seriesId?: string }) => {
   const { user, mutate: userMutate } = useCurrentUser();
   const { mutate: favoritesMutate } = useFavorites();
   const [isLoading, setloading] = useState(false);
   const isFavorite = useMemo(() => {
-    const list = movieId ? user?.favoriteMovies.includes(movieId) : false;
+    const list = seriesId ? user?.favoriteSeries.includes(seriesId) : false;
     return list;
-  }, [user, movieId]);
+  }, [user, seriesId]);
 
   const toggleFavorites = useCallback(async () => {
     try {
@@ -23,12 +23,12 @@ const FavoriteButton = ({ movieId }: { movieId?: string }) => {
       if (isFavorite) {
         req = async () =>
           await axios
-            .delete("/api/favorite", { data: { id: movieId, type: "movie" } })
+            .delete("/api/favorite", { data: { id: seriesId, type: "series" } })
             .then((res) => toast.success(res.data.message));
       } else {
         req = async () =>
           await axios
-            .post("/api/favorite", { id: movieId, type: "movie" })
+            .post("/api/favorite", { id: seriesId, type: "series" })
             .then((res) => toast.success(res.data.message));
       }
 
@@ -41,7 +41,7 @@ const FavoriteButton = ({ movieId }: { movieId?: string }) => {
     } finally {
       setloading(false);
     }
-  }, [setloading, userMutate, favoritesMutate, isFavorite, movieId]);
+  }, [setloading, userMutate, favoritesMutate, isFavorite, seriesId]);
 
   const Icon = isFavorite ? CheckIcon : PlusIcon;
 
@@ -61,4 +61,4 @@ const FavoriteButton = ({ movieId }: { movieId?: string }) => {
   );
 };
 
-export default FavoriteButton;
+export default FavoriteSeriesButton;

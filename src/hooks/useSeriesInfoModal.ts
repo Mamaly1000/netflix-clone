@@ -9,7 +9,7 @@ interface useSeriesInfoModalStore {
 
 export const useSeriesInfoModal = create<useSeriesInfoModalStore>((set) => ({
   isOpen: false,
-  onClose: () => set({ isOpen: false, seriesId: undefined }),
-  onOpen: (seriesId) => set({ isOpen: true, seriesId }),
   seriesId: undefined,
+  onClose: () => set({ isOpen: false, seriesId: undefined }),
+  onOpen: (seriesId) => set({ isOpen: true, seriesId: seriesId }),
 }));
