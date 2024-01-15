@@ -30,6 +30,9 @@ export default async function handler(
 
     const admins = await prisma.admin.findMany({
       orderBy: { createdAt: "desc" },
+      include: {
+        user: true,
+      },
     });
 
     return res.status(200).json({ users, admins });

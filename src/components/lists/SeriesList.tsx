@@ -21,7 +21,7 @@ const SeriesList = ({
   }
 
   return (
-    <section className="px-4 md:px-12 mt-4 space-y-8  pb-40  ">
+    <section className="px-4 md:px-12 mt-4 space-y-8  pb-40   min-w-full">
       <p className="text-white text-base md:text-lg lg:text-2xl font-semibold mb-4  capitalize">
         {title}
       </p>
@@ -32,7 +32,7 @@ const SeriesList = ({
         {adminMode && (
           <div
             className="cursor-pointer group hover:border-red-700 col-span-1 min-h-[150px] border-[1px] border-white border-dotted rounded-lg  flex items-center justify-center "
-            onClick={onOpen}
+            onClick={() => onOpen}
           >
             <button className="p-5 rounded-full flex items-center justify-center drop-shadow-2xl transition-all bg-transparent  group-hover:bg-red-700 border-[1px] border-white group-hover:border-red-700 w-20 h-20 max-h-20 max-w-20 m-auto">
               <PlusIcon className="text-white" />

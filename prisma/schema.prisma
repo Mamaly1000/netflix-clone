@@ -26,6 +26,7 @@ model User {
   favoriteMovies String[] @db.ObjectId
   favoriteSeries String[] @db.ObjectId
   favoriteNews String[] @db.ObjectId 
+  Admin Admin[]
 }
 
 model Account {

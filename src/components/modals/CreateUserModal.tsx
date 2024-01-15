@@ -1,16 +1,17 @@
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Modal from "./Modal";
+import { useCreateUserModal } from "@/hooks/useCteateUser";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Modal from "./Modal";
-import { useProfileModal } from "@/hooks/useProfileModal";
-import Input from "../inputs/Input";
 import ImageUpload from "../inputs/ImageUpload";
-import toast from "react-hot-toast";
+import Input from "../inputs/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import useUsers from "@/hooks/useUsers";
+import toast from "react-hot-toast";
+import RadioButton from "../inputs/RadioButton";
 
-const ProfileSchema = z.object({
+const createUserSchema = z.object({
   name: z
     .string({
       required_error: "name is required",
@@ -22,50 +23,52 @@ const ProfileSchema = z.object({
       required_error: "email is required",
     })
     .email("email is not valid"),
-  password: z.string().min(6).optional(),
+  password: z.string().min(6),
+  role: z.string().default("USER"),
 });
 
-const ProfileModal = () => {
-  const { user, mutate } = useCurrentUser();
-  const profileModal = useProfileModal();
+const CreateUserModal = () => {
+  const { mutate } = useUsers();
 
+  const { onClose, isOpen, type } = useCreateUserModal();
   const [isLoading, setLoading] = useState(false);
 
   const form = useForm({
-    resolver: zodResolver(ProfileSchema),
+    resolver: zodResolver(createUserSchema),
     defaultValues: {
       name: "",
       email: "",
       image: "",
       password: "",
+      role: "USER",
     },
   });
 
-  useEffect(() => {
-    if (user) {
-      form.reset({
-        name: user.name,
-        email: user.email || "",
-        image: user.image || "",
-      });
-    }
-  }, [user]);
-
   const onSubmit = form.handleSubmit(
-    async (values: z.infer<typeof ProfileSchema>) => {
+    async (values: z.infer<typeof createUserSchema>) => {
       try {
         setLoading(true);
-        await axios.post("/api/update", values).then((res) => {
-          toast.success(res.data.message);
+        let req;
+        if (type === "create") {
+          req = async () =>
+            await axios
+              .post("/api/users", values)
+              .then((res) => toast.success(res.data.message));
+        } else {
+          req = async () =>
+            await axios
+              .patch("/api/users", values)
+              .then((res) => toast.success(res.data.message));
+        }
+        await req().then(() => {
           mutate();
-          form.reset();
-          profileModal.onClose();
         });
       } catch (error: any) {
-        if (error?.response?.data?.message) {
-          toast.error(error?.response?.data?.message);
+        if (error.response.data.message) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("something went wrong!");
         }
-        toast.error("something went wrong!");
       } finally {
         setLoading(false);
       }
@@ -73,11 +76,7 @@ const ProfileModal = () => {
   );
 
   return (
-    <Modal
-      disable={isLoading}
-      isVisible={profileModal.isOpen}
-      onClose={profileModal.onClose}
-    >
+    <Modal isVisible={isOpen} onClose={onClose} disable={isLoading}>
       <form
         className=" w-[99%]  md:w-[300px] lg:w-[500px] bg-zinc-900 p-5 min-h-full flex flex-col items-start justify-start gap-4 text-white"
         onSubmit={onSubmit}
@@ -115,6 +114,25 @@ const ProfileModal = () => {
           disabled={isLoading}
           type="password"
         />
+        <RadioButton
+          register={form.register("role")}
+          value={form.watch("role")}
+          disabled={isLoading}
+          onChange={(val: string) => {
+            form.setValue("role", val);
+          }}
+          name="role"
+          disPlayedValues={[
+            {
+              label: "user",
+              value: "USER",
+            },
+            {
+              label: "admin",
+              value: "ADMIN",
+            },
+          ]}
+        />
         <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row">
           <button
             className="text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
@@ -136,4 +154,4 @@ const ProfileModal = () => {
   );
 };
 
-export default ProfileModal;
+export default CreateUserModal;

@@ -55,7 +55,7 @@ export const authOptions: AuthOptions = {
           throw new Error("Incorrect password");
         }
 
-        return user;
+        return { ...user, image: "" };
       },
     }),
   ],

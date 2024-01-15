@@ -8,8 +8,10 @@ import slate from "@/public/images/default-slate.png";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useRouter } from "next/router";
 import Image from "next/image";
-export const getServerSideProps = async (ctx: NextPageContext) => {
-  const session = await getSession(ctx);
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
+export const getServerSideProps = async (ctx: any) => {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
   if (!session) {
     return {
       redirect: {

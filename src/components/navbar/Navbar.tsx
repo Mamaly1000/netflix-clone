@@ -14,10 +14,13 @@ import { IoLogOut } from "react-icons/io5";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
 import InfoModal from "../modals/InfoModal";
 import { useProfileModal } from "@/hooks/useProfileModal";
+import { useRouter } from "next/router";
 
 const TOP_OFFSET = 66;
 
 const Navbar = () => {
+  const router = useRouter();
+
   const { user } = useCurrentUser();
   const profileModal = useProfileModal();
 
@@ -159,6 +162,15 @@ const Navbar = () => {
                   </p>
                 </div>
               </div>
+              <hr className="bg-gray-600 border-0 h-px my-4" />
+              {user?.IsAdmin && (
+                <div
+                  onClick={() => router.push(`/admin`)}
+                  className="flex gap-y-3 capitalize items-center justify-start text-white px-3 hover:underline"
+                >
+                  admin Dashboard
+                </div>
+              )}
               <hr className="bg-gray-600 border-0 h-px my-4" />
               <div
                 onClick={() => signOut()}
