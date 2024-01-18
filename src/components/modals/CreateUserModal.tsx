@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "./Modal";
 import { useCreateUserModal } from "@/hooks/useCteateUser";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import axios from "axios";
 import useUsers from "@/hooks/useUsers";
 import toast from "react-hot-toast";
 import RadioButton from "../inputs/RadioButton";
+import useUser from "@/hooks/useUser";
 
 const createUserSchema = z.object({
   name: z
@@ -28,10 +29,11 @@ const createUserSchema = z.object({
 });
 
 const CreateUserModal = () => {
-  const { mutate } = useUsers();
-
-  const { onClose, isOpen, type } = useCreateUserModal();
+  const { onClose, isOpen, type, id } = useCreateUserModal();
   const [isLoading, setLoading] = useState(false);
+
+  const { mutate } = useUsers();
+  const { user, mutate: mutateSelectedUser } = useUser(id);
 
   const form = useForm({
     resolver: zodResolver(createUserSchema),
@@ -44,6 +46,18 @@ const CreateUserModal = () => {
     },
   });
 
+  useMemo(() => {
+    if (user) {
+      form.reset({
+        email: user.email || "",
+        image: user.image || "",
+        name: user.name,
+        password: "",
+        role: "USER",
+      });
+    }
+  }, [user, onClose, id]);
+
   const onSubmit = form.handleSubmit(
     async (values: z.infer<typeof createUserSchema>) => {
       try {
@@ -54,15 +68,19 @@ const CreateUserModal = () => {
             await axios
               .post("/api/users", values)
               .then((res) => toast.success(res.data.message));
-        } else {
+        } else if (user && id && type === "update") {
           req = async () =>
-            await axios
-              .patch("/api/users", values)
-              .then((res) => toast.success(res.data.message));
+            await axios.patch(`/api/users/${id}`, values).then((res) => {
+              mutateSelectedUser();
+              toast.success(res.data.message);
+            });
         }
-        await req().then(() => {
-          mutate();
-        });
+        req &&
+          (await req!().then(() => {
+            mutate();
+            onClose();
+            form.reset();
+          }));
       } catch (error: any) {
         if (error.response.data.message) {
           toast.error(error.response.data.message);
@@ -71,6 +89,9 @@ const CreateUserModal = () => {
         }
       } finally {
         setLoading(false);
+        mutate();
+        onClose();
+        form.reset();
       }
     }
   );
@@ -114,32 +135,34 @@ const CreateUserModal = () => {
           disabled={isLoading}
           type="password"
         />
-        <RadioButton
-          register={form.register("role")}
-          value={form.watch("role")}
-          disabled={isLoading}
-          onChange={(val: string) => {
-            form.setValue("role", val);
-          }}
-          name="role"
-          disPlayedValues={[
-            {
-              label: "user",
-              value: "USER",
-            },
-            {
-              label: "admin",
-              value: "ADMIN",
-            },
-          ]}
-        />
+        {type === "update" && (
+          <RadioButton
+            register={form.register("role")}
+            value={form.watch("role")}
+            disabled={isLoading}
+            onChange={(val: string) => {
+              form.setValue("role", val);
+            }}
+            name="role"
+            disPlayedValues={[
+              {
+                label: "user",
+                value: "USER",
+              },
+              {
+                label: "admin",
+                value: "ADMIN",
+              },
+            ]}
+          />
+        )}
         <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row">
           <button
-            className="text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
+            className="text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50  capitalize"
             type="submit"
             disabled={isLoading}
           >
-            Update
+            {type}
           </button>
           <button
             className="hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"

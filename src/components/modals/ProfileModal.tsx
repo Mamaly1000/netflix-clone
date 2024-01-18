@@ -79,7 +79,7 @@ const ProfileModal = () => {
       onClose={profileModal.onClose}
     >
       <form
-        className=" w-[99%]  md:w-[300px] lg:w-[500px] bg-zinc-900 p-5 min-h-full flex flex-col items-start justify-start gap-4 text-white"
+        className="  w-screen md:w-[500px] lg:w-[600px] max-w-full overflow-x-hidden overflow-y-auto   bg-zinc-900 p-5 min-h-full flex flex-col items-start justify-start gap-4 text-white"
         onSubmit={onSubmit}
       >
         <ImageUpload
@@ -117,14 +117,14 @@ const ProfileModal = () => {
         />
         <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row">
           <button
-            className="text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
+            className="w-full md:w-fit text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
             type="submit"
             disabled={isLoading}
           >
             Update
           </button>
           <button
-            className="hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
+            className="w-full md:w-fit hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
             onClick={() => form.reset()}
             disabled={isLoading}
           >

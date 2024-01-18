@@ -12,11 +12,18 @@ import logo from "@/public/images/logo.png";
 import blue from "@/public/images/default-blue.png";
 import { IoLogOut } from "react-icons/io5";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
-import InfoModal from "../modals/InfoModal";
 import { useProfileModal } from "@/hooks/useProfileModal";
 import { useRouter } from "next/router";
 
 const TOP_OFFSET = 66;
+
+export const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "Series", href: "/series" },
+  { label: "Films", href: "/films" },
+  { label: "News & Popular", href: "/news" },
+  { label: "My List", href: "/favorites" },
+];
 
 const Navbar = () => {
   const router = useRouter();
@@ -64,12 +71,16 @@ const Navbar = () => {
           <Image src={logo.src} alt="logo" fill />
         </div>
         <div className="flex-row ml-8 gap-7 hidden lg:flex">
-          <NavbarItem label="Home" />
-          <NavbarItem label="Series" />
-          <NavbarItem label="Films" />
-          <NavbarItem label="News & Popular" />
-          <NavbarItem label="My List" />
-          <NavbarItem label="Browse By Language" />
+          {navLinks.map((link) => {
+            return (
+              <NavbarItem
+                key={link.href}
+                href={link.href}
+                label={link.label}
+                onClick={() => router.push(link.href)}
+              />
+            );
+          })}
         </div>
         <div
           onClick={toggleNavbartMenu}
@@ -87,31 +98,18 @@ const Navbar = () => {
             visible={displayNavbarMenu}
             setClose={() => setDisplayNavbarMenu(false)}
           >
-            <div className="flex flex-col gap-4 ">
-              <NavbarItem
-                label="Home"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
-              <NavbarItem
-                label="Series"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
-              <NavbarItem
-                label="Films"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
-              <NavbarItem
-                label="News & Popular"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
-              <NavbarItem
-                label="My List"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
-              <NavbarItem
-                label="Browse By Language"
-                className="capitalize px-3 text-center text-white hover:underline "
-              />
+            <div className="flex flex-col gap-4 items-center justify-center">
+              {navLinks.map((link) => {
+                return (
+                  <NavbarItem
+                    key={link.href}
+                    href={link.href}
+                    label={link.label}
+                    className="capitalize w-fit px-3 text-center text-white   "
+                    onClick={() => router.push(link.href)}
+                  />
+                );
+              })}
             </div>
           </Menu>
         </div>
@@ -126,7 +124,7 @@ const Navbar = () => {
             onClick={toggleAccountMenu}
             className="flex flex-row items-center gap-2 cursor-pointer relative"
           >
-            <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden ">
+            <div className="min-w-10 min-h-10 max-w-10 max-h-10 lg:w-10 lg:h-10 rounded-md overflow-hidden ">
               <Image
                 className="object-contain  max-w-fit rounded-md"
                 src={user?.image || blue.src}
@@ -164,14 +162,16 @@ const Navbar = () => {
               </div>
               <hr className="bg-gray-600 border-0 h-px my-4" />
               {user?.IsAdmin && (
-                <div
-                  onClick={() => router.push(`/admin`)}
-                  className="flex gap-y-3 capitalize items-center justify-start text-white px-3 hover:underline"
-                >
-                  admin Dashboard
-                </div>
+                <>
+                  <div
+                    onClick={() => router.push(`/admin`)}
+                    className="flex gap-y-3 capitalize items-center justify-start text-white px-3 hover:underline"
+                  >
+                    admin Dashboard
+                  </div>
+                  <hr className="bg-gray-600 border-0 h-px my-4" />
+                </>
               )}
-              <hr className="bg-gray-600 border-0 h-px my-4" />
               <div
                 onClick={() => signOut()}
                 className="px-3 text-center text-white text-sm hover:underline  flex items-center justify-between gap-3"

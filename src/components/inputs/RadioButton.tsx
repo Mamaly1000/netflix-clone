@@ -25,10 +25,12 @@ const RadioButton = ({
         >
           <label htmlFor={radio.value}>{radio.label}</label>
           <input
+            type="radio"
             checked={value === radio.value}
+            onChange={() => onChange(radio.value)}
             onClick={() => onChange(radio.value)}
             className={twMerge(
-              "checked:bg-red-700 w-12 h-12 rounded-full border-white border-2 hover:scale-105 transition-all bg-transparent cursor-pointer disabled:cursor-not-allowed"
+              "checked:accent-red-500 w-[15px] h-[15px] rounded-full border-white border-2 hover:scale-105 transition-all bg-transparent cursor-pointer disabled:cursor-not-allowed"
             )}
             disabled={disabled}
           />

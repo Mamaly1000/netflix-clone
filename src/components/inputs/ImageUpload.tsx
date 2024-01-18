@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 const ImageUpload = ({
   value,
@@ -17,7 +17,7 @@ const ImageUpload = ({
     (base64: string) => {
       onChange(base64);
     },
-    [onChange]
+    [onChange, value]
   );
 
   const handleDrop = useCallback(
@@ -30,7 +30,7 @@ const ImageUpload = ({
       };
       reader.readAsDataURL(file);
     },
-    [handleChange, setBase64]
+    [handleChange, setBase64, value]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -43,16 +43,22 @@ const ImageUpload = ({
     },
   });
 
+  useEffect(() => {
+    setBase64(value);
+  }, [value]);
+
   return (
     <div
       {...getRootProps({
         className:
-          "w-full p-4 text-white text-center border-2 border-dotted rounded-md border-white transition-all focus:border-red-700 cursor-pointer",
+          "min-w-full max-w-full p-4 text-white text-center border-2 border-dotted rounded-md border-white transition-all focus:border-red-700 cursor-pointer",
       })}
     >
-      <input {...getInputProps({
-        disabled
-      })} />
+      <input
+        {...getInputProps({
+          disabled,
+        })}
+      />
       {base64 ? (
         <div className="flex items-center justify-center">
           <Image src={base64} height="100" width="100" alt="Uploaded image" />

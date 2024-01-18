@@ -39,16 +39,20 @@ const Modal = ({
       <div className="relative w-auto mx-auto max-w-3xl rounded-md overflow-hidden">
         <div
           className={`${
-            visible ? "scale-100" : "scale-0"
-          } transform   transition-all duration-300 relative flex-auto bg-zinc-900 drop-shadow-md`}
+            visible
+              ? "translate-y-0 md:translate-y-0 md:scale-100"
+              : " translate-y-[900px] md:translate-y-0 md:scale-0"
+          } transform    transition-all duration-300 relative flex-auto bg-zinc-900 drop-shadow-md`}
         >
-          <div
-            onClick={handleClose}
-            className="cursor-pointer z-20 absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center"
-          >
-            <XMarkIcon className="text-white w-6" />
+          <div className="min-w-full h-screen max-h-screen overflow-auto md:w-fit md:h-fit relative flex flex-col items-start justify-start gap-2">
+            <div
+              onClick={handleClose}
+              className="cursor-pointer z-20 absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center"
+            >
+              <XMarkIcon className="text-white w-6" />
+            </div>
+            {children}
           </div>
-          {children}
         </div>
       </div>
     </div>

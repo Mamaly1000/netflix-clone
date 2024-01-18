@@ -1,7 +1,7 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { BiMoviePlay } from "react-icons/bi";
+import { BiMoviePlay, BiUser } from "react-icons/bi";
 import { BsNewspaper } from "react-icons/bs";
 import { FaUsersCog } from "react-icons/fa";
 import { PiFilmReel } from "react-icons/pi";
@@ -12,6 +12,11 @@ import { IoClose } from "react-icons/io5";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
 export const sideBarLinks = [
+  {
+    href: "/",
+    icon: BiUser,
+    label: "profile",
+  },
   {
     label: "movies",
     href: "/movies",
