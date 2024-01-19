@@ -3,6 +3,7 @@ import React from "react";
 import NewsCard from "../cards/NewsCard";
 import { twMerge } from "tailwind-merge";
 import { isEmpty } from "lodash";
+import Loader from "../ui/Loader";
 
 const NewsList = ({
   news = [],
@@ -16,7 +17,7 @@ const NewsList = ({
   title: string;
 }) => {
   if (isEmpty(news)) {
-    return null;
+    return <Loader message="Loading News" />;
   }
 
   return (
@@ -26,7 +27,7 @@ const NewsList = ({
         className ? className : "p-5 md:p-10"
       )}
     >
-     <p className="text-white text-base md:text-lg lg:text-2xl font-semibold mb-4  capitalize">
+      <p className="text-white text-base md:text-lg lg:text-2xl font-semibold mb-4  capitalize">
         {title}
       </p>
       <div className="min-w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5">

@@ -18,7 +18,7 @@ export const sideBarLinks = [
     onClick: (router: NextRouter) => router.push("/"),
   },
   {
-    href: "",
+    href: "/",
     icon: BiUser,
     label: "profile",
   },
@@ -76,6 +76,7 @@ const SideBar = ({
         router.push("/");
       }
       router.push(`/admin${href}`);
+      closeHnadler();
     },
     [user, isLoading]
   );
@@ -120,10 +121,10 @@ const SideBar = ({
         <hr className="bg-zinc-800 min-w-full min-h-[1px] max-h-[1px] border-red-700" />
         <div className="min-w-full text-xl flex flex-col items-start justify-start gap-3 min-h-fit">
           {sideBarLinks.map(
-            ({ onClick: linkOnClick, label, href, icon: Icon }) => {
+            ({ onClick: linkOnClick, label, href, icon: Icon }, i) => {
               return (
                 <div
-                  key={href}
+                  key={i}
                   onClick={() => {
                     if (linkOnClick) {
                       linkOnClick(router);

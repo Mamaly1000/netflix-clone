@@ -6,6 +6,7 @@ import { useCreateUserModal } from "@/hooks/useCteateUser";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoNotificationsOffOutline } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
+import Loader from "../ui/Loader";
 
 export type AdminType = Admin & { user: User };
 
@@ -93,9 +94,7 @@ const AdminsList = ({
             );
           })
         ) : (
-          <div className="min-w-full p-5 capitalize text-lg text-white bg-zinc-800 flex items-center justify-center">
-            no data
-          </div>
+          <Loader message="no data" />
         )}
       </div>
     </section>

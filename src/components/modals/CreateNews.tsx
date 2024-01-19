@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import useNewses from "@/hooks/useNewses";
 import useNews from "@/hooks/useNews";
+import Loader from "../ui/Loader";
 const newsSchema = z.object({
   title: z
     .string({
@@ -161,174 +162,178 @@ const CreateNews = () => {
 
   return (
     <Modal isVisible={isOpen} disable={isLoading} onClose={onClose}>
-      {!singleNewsLoading && (
-        <form
-          className="w-screen md:w-[500px] lg:w-[600px] max-w-full overflow-x-hidden overflow-y-auto   bg-zinc-900 p-5 md:max-h-[70vh] min-h-full flex flex-col items-start justify-start gap-4 text-white"
-          onSubmit={onSubmit}
-        >
-          <Input
-            label="title"
-            name="title"
-            onChange={(e) => form.setValue("title", e.target.value)}
-            register={form.register("title", {
-              required: true,
-            })}
-            value={form.watch("title")}
-            disabled={isLoading}
-            type="text"
-          />
-          <Select
-            isMulti
-            placeholder="tags"
-            name="tags"
-            isDisabled={isLoading}
-            value={tags}
-            options={categories as any}
-            className="basic-multi-select bg-neutral-700   min-w-full text-white z-50"
-            classNamePrefix="select"
-            styles={{
-              control: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(64 64 64 )",
-                  borderColor: "#fff",
-                  ":hover": {
-                    borderColor:
-                      "rgb(185 28 28 / var(--tw-text-opacity)) !important",
+      <form
+        className="w-screen md:w-[500px] lg:w-[600px] max-w-full overflow-x-hidden overflow-y-auto   bg-zinc-900 p-5 md:max-h-[70vh] min-h-full flex flex-col items-start justify-start gap-4 text-white"
+        onSubmit={onSubmit}
+      >
+        {!singleNewsLoading ? (
+          <>
+            <Input
+              label="title"
+              name="title"
+              onChange={(e) => form.setValue("title", e.target.value)}
+              register={form.register("title", {
+                required: true,
+              })}
+              value={form.watch("title")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Select
+              isMulti
+              placeholder="tags"
+              name="tags"
+              isDisabled={isLoading}
+              value={tags}
+              options={categories as any}
+              className="basic-multi-select bg-neutral-700   min-w-full text-white z-50"
+              classNamePrefix="select"
+              styles={{
+                control: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(64 64 64 )",
+                    borderColor: "#fff",
+                    ":hover": {
+                      borderColor:
+                        "rgb(185 28 28 / var(--tw-text-opacity)) !important",
+                      boxShadow: "none !important",
+                    },
                     boxShadow: "none !important",
-                  },
-                  boxShadow: "none !important",
-                  color: "#fff",
-                  overflow: "hidden",
-                };
-              },
-              input: (base) => {
-                return {
-                  ...base,
-                  color: "#fff",
-                };
-              },
-              group: (base) => {
-                return {
-                  ...base,
-                  background: "red",
-                };
-              },
-              menu: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(64 64 64)",
-                  opacity: 1,
-                  color: "#fff",
-                };
-              },
-              menuList: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(64 64 64)",
-                  color: "#fff",
-                  opacity: 1,
-                };
-              },
-              valueContainer: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(64 64 64 )",
-                  color: "#fff",
-                };
-              },
-              multiValue: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(185 28 28)",
-                  color: "#ffffff !important",
-                };
-              },
-              multiValueLabel: (base) => {
-                return {
-                  ...base,
-                  color: "#fff",
-                };
-              },
-              option: (base) => {
-                return {
-                  ...base,
-                  background: "rgb(64 64 64)",
-                  color: "#fff",
-                  ":hover": {
+                    color: "#fff",
+                    overflow: "hidden",
+                  };
+                },
+                input: (base) => {
+                  return {
+                    ...base,
+                    color: "#fff",
+                  };
+                },
+                group: (base) => {
+                  return {
+                    ...base,
                     background: "red",
-                  },
-                  cursor: "pointer",
-                };
-              },
-            }}
-            onChange={(val) => {
-              setTags(val as any);
-            }}
-          />
-          <Input
-            label="description"
-            name="description"
-            onChange={(e) => form.setValue("description", e.target.value)}
-            register={form.register("description", {
-              required: true,
-            })}
-            value={form.watch("description")}
-            disabled={isLoading}
-            type="text"
-          />
-          <ImageUpload
-            label="coverImage"
-            onChange={(e) => form.setValue("coverImage", e)}
-            value={form.watch("coverImage")}
-            disabled={isLoading}
-          />
-          <Input
-            label="author Name"
-            name="authorName"
-            onChange={(e) => form.setValue("authorName", e.target.value)}
-            register={form.register("authorName", {
-              required: true,
-            })}
-            value={form.watch("authorName")}
-            disabled={isLoading}
-            type="text"
-          />
-          <Input
-            label="author Email"
-            name="authorEmail"
-            onChange={(e) => form.setValue("authorEmail", e.target.value)}
-            register={form.register("authorEmail", {
-              required: true,
-            })}
-            value={form.watch("authorEmail")}
-            disabled={isLoading}
-            type="text"
-          />
-          <ImageUpload
-            label="author profile pic"
-            onChange={(e) => form.setValue("authorProfilePic", e)}
-            value={form.watch("authorProfilePic")}
-            disabled={isLoading}
-          />
-          <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row">
-            <button
-              className="w-full md:w-fit text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
-              type="submit"
+                  };
+                },
+                menu: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(64 64 64)",
+                    opacity: 1,
+                    color: "#fff",
+                  };
+                },
+                menuList: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(64 64 64)",
+                    color: "#fff",
+                    opacity: 1,
+                  };
+                },
+                valueContainer: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(64 64 64 )",
+                    color: "#fff",
+                  };
+                },
+                multiValue: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(185 28 28)",
+                    color: "#ffffff !important",
+                  };
+                },
+                multiValueLabel: (base) => {
+                  return {
+                    ...base,
+                    color: "#fff",
+                  };
+                },
+                option: (base) => {
+                  return {
+                    ...base,
+                    background: "rgb(64 64 64)",
+                    color: "#fff",
+                    ":hover": {
+                      background: "red",
+                    },
+                    cursor: "pointer",
+                  };
+                },
+              }}
+              onChange={(val) => {
+                setTags(val as any);
+              }}
+            />
+            <Input
+              label="description"
+              name="description"
+              onChange={(e) => form.setValue("description", e.target.value)}
+              register={form.register("description", {
+                required: true,
+              })}
+              value={form.watch("description")}
               disabled={isLoading}
-            >
-              Update
-            </button>
-            <button
-              className="w-full md:w-fit hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
-              onClick={() => form.reset()}
+              type="text"
+            />
+            <ImageUpload
+              label="coverImage"
+              onChange={(e) => form.setValue("coverImage", e)}
+              value={form.watch("coverImage")}
               disabled={isLoading}
-            >
-              Reset
-            </button>
-          </div>
-        </form>
-      )}
+            />
+            <Input
+              label="author Name"
+              name="authorName"
+              onChange={(e) => form.setValue("authorName", e.target.value)}
+              register={form.register("authorName", {
+                required: true,
+              })}
+              value={form.watch("authorName")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Input
+              label="author Email"
+              name="authorEmail"
+              onChange={(e) => form.setValue("authorEmail", e.target.value)}
+              register={form.register("authorEmail", {
+                required: true,
+              })}
+              value={form.watch("authorEmail")}
+              disabled={isLoading}
+              type="text"
+            />
+            <ImageUpload
+              label="author profile pic"
+              onChange={(e) => form.setValue("authorProfilePic", e)}
+              value={form.watch("authorProfilePic")}
+              disabled={isLoading}
+            />
+            <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row">
+              <button
+                className="w-full md:w-fit text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
+                type="submit"
+                disabled={isLoading}
+              >
+                Update
+              </button>
+              <button
+                className="w-full md:w-fit hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
+                onClick={() => form.reset()}
+                disabled={isLoading}
+              >
+                Reset
+              </button>
+            </div>
+          </>
+        ) : (
+          <Loader message="loading news data" />
+        )}
+      </form>
     </Modal>
   );
 };

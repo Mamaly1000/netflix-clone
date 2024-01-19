@@ -28,7 +28,10 @@ const DeleteNewsButton = ({ id }: { id: string }) => {
 
   return (
     <div
-      onClick={deleteHandler}
+      onClick={(e) => {
+        e.stopPropagation();
+        deleteHandler();
+      }}
       className={twMerge(
         isLoading ? "animate-pulse" : "animate-none",
         "text-red-500 w-10 h-10 rounded-full bg-zinc-800 bg-opacity-80 flex items-center justify-center"

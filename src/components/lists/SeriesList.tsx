@@ -5,30 +5,26 @@ import SeriesCard from "../cards/SeriesCard";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useCreateSeriesModal } from "@/hooks/useCreateSeriesModal";
 import { twMerge } from "tailwind-merge";
+import Loader from "../ui/Loader";
 
 const SeriesList = ({
   data,
   title,
-  adminMode = false,
   className,
 }: {
   className?: string;
-  adminMode?: boolean;
   title?: string;
   data: series[];
 }) => {
   const { onOpen } = useCreateSeriesModal();
 
   if (isEmpty(data)) {
-    return null;
+    return <Loader message="Loading Series" />;
   }
 
   return (
     <section
-      className={twMerge(
-        "px-4 md:px-12 mt-4 space-y-8 min-w-full",
-        className
-      )}
+      className={twMerge("px-4 md:px-12 mt-4 space-y-8 min-w-full", className)}
     >
       <p className="text-white text-base md:text-lg lg:text-2xl font-semibold mb-4  capitalize">
         {title}
@@ -37,16 +33,6 @@ const SeriesList = ({
         {data.map((series) => {
           return <SeriesCard key={series.id} series={series} />;
         })}
-        {adminMode && (
-          <div
-            className="cursor-pointer group hover:border-red-700 col-span-1 min-h-[150px] border-[1px] border-white border-dotted rounded-lg  flex items-center justify-center "
-            onClick={() => onOpen}
-          >
-            <button className="p-5 rounded-full flex items-center justify-center drop-shadow-2xl transition-all bg-transparent  group-hover:bg-red-700 border-[1px] border-white group-hover:border-red-700 w-20 h-20 max-h-20 max-w-20 m-auto">
-              <PlusIcon className="text-white" />
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );

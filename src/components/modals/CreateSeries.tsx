@@ -11,6 +11,7 @@ import axios from "axios";
 import useSeries from "@/hooks/useSeries";
 import useSingleSeries from "@/hooks/useSingleSeries";
 import useBillboard from "@/hooks/useBillboard";
+import Loader from "../ui/Loader";
 
 const seriesSchema = z.object({
   title: z
@@ -46,7 +47,8 @@ const seriesSchema = z.object({
 const CreateSeries = () => {
   const { onClose, isOpen, seriesId } = useCreateSeriesModal();
   const { mutate } = useSeries();
-  const { mutate: seriesMutate } = useSingleSeries(seriesId);
+  const { mutate: seriesMutate, isLoading: seriesLoading } =
+    useSingleSeries(seriesId);
   const { mutate: billboardMutate } = useBillboard({ type: "series" });
   const { series } = useSingleSeries(seriesId);
 
@@ -125,123 +127,133 @@ const CreateSeries = () => {
     <Modal isVisible={isOpen} onClose={onClose} disable={isLoading}>
       <form
         onSubmit={onSubmit}
-        className="p-5 w-[90%] sm:w-[300px] md:w-[500px] lg:w-[650px] overflow-x-hidden overscroll-y-auto flex flex-col gap-8 max-h-[70vh]"
+        className="px-5 py-10 w-screen max-w-full md:w-[550px] lg:w-[650px] h-screen md:h-[70vh]  flex flex-col gap-8  "
       >
-        <Input
-          label="Title"
-          name="title"
-          onChange={(e) => form.setValue("title", e.target.value)}
-          register={form.register("title")}
-          value={form.watch("title")}
-          disabled={isLoading}
-          type="text"
-        />
-        <Input
-          label="description"
-          name="description"
-          onChange={(e) => form.setValue("description", e.target.value)}
-          register={form.register("description")}
-          value={form.watch("description")}
-          disabled={isLoading}
-          type="text"
-        />
-        <Input
-          label="thumbnailUrl"
-          name="thumbnailUrl"
-          onChange={(e) => form.setValue("thumbnailUrl", e.target.value)}
-          register={form.register("thumbnailUrl")}
-          value={form.watch("thumbnailUrl")}
-          disabled={isLoading}
-          type="text"
-        />
-        {form.watch("thumbnailUrl") && (
-          <div className="relative min-w-full flex items-center justify-center object-cover rounded-lg overflow-hidden drop-shadow-2xl border-red-700 border-[1px] min-h-[300px]">
-            <Image alt="series image" src={form.watch("thumbnailUrl")} fill />
-          </div>
+        {!seriesLoading ? (
+          <>
+            <Input
+              label="Title"
+              name="title"
+              onChange={(e) => form.setValue("title", e.target.value)}
+              register={form.register("title")}
+              value={form.watch("title")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Input
+              label="description"
+              name="description"
+              onChange={(e) => form.setValue("description", e.target.value)}
+              register={form.register("description")}
+              value={form.watch("description")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Input
+              label="thumbnailUrl"
+              name="thumbnailUrl"
+              onChange={(e) => form.setValue("thumbnailUrl", e.target.value)}
+              register={form.register("thumbnailUrl")}
+              value={form.watch("thumbnailUrl")}
+              disabled={isLoading}
+              type="text"
+            />
+            {form.watch("thumbnailUrl") && (
+              <div className="relative min-w-full flex items-center justify-center object-cover rounded-lg overflow-hidden drop-shadow-2xl border-red-700 border-[1px] min-h-[300px]">
+                <Image
+                  alt="series image"
+                  src={form.watch("thumbnailUrl")}
+                  fill
+                />
+              </div>
+            )}
+            <Input
+              label="videoUrl"
+              name="videoUrl"
+              onChange={(e) => form.setValue("videoUrl", e.target.value)}
+              register={form.register("videoUrl")}
+              value={form.watch("videoUrl")}
+              disabled={isLoading}
+              type="text"
+            />
+            {form.watch("videoUrl") && (
+              <div className="min-w-full flex items-center justify-center overflow-hidden max-h-[300px] min-h-[300px] bg-black border-[1px] border-red-700 rounded-lg drop-shadow-2xl ">
+                <video
+                  src={form.watch("videoUrl")}
+                  poster={form.watch("thumbnailUrl")}
+                  autoPlay
+                  muted
+                  loop
+                  className="min-w-full min-h-[300px] max-h-[300px] object-cover brightness-[60%]"
+                ></video>
+              </div>
+            )}
+            <Input
+              label="genre"
+              name="genre"
+              onChange={(e) => form.setValue("genre", e.target.value)}
+              register={form.register("genre")}
+              value={form.watch("genre")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Input
+              label="duration"
+              name="duration"
+              onChange={(e) => form.setValue("duration", e.target.value)}
+              register={form.register("duration")}
+              value={form.watch("duration")}
+              disabled={isLoading}
+              type="text"
+            />
+            <Input
+              label="seasons"
+              name="seasons"
+              onChange={(e) =>
+                form.setValue(
+                  "seasons",
+                  isNaN(+e.target.value) ? "" : e.target.value
+                )
+              }
+              register={form.register("seasons")}
+              value={form.watch("seasons") as any}
+              disabled={isLoading}
+              type="number"
+            />
+            <Input
+              label="epizodes"
+              name="epizodes"
+              onChange={(e) =>
+                form.setValue(
+                  "epizodes",
+                  isNaN(+e.target.value) ? "" : e.target.value
+                )
+              }
+              register={form.register("epizodes")}
+              value={form.watch("epizodes") as any}
+              disabled={isLoading}
+              type="number"
+            />
+            <div className="min-w-full flex items-center justify-start gap-3 flex-col md:flex-row pb-5">
+              <button
+                className="w-full md:w-fit text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
+                type="submit"
+                disabled={isLoading}
+              >
+                Update
+              </button>
+              <button
+                className="w-full md:w-fit hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
+                onClick={() => form.reset()}
+                disabled={isLoading}
+              >
+                Reset
+              </button>
+            </div>
+          </>
+        ) : (
+          <Loader message="Loading series data" />
         )}
-        <Input
-          label="videoUrl"
-          name="videoUrl"
-          onChange={(e) => form.setValue("videoUrl", e.target.value)}
-          register={form.register("videoUrl")}
-          value={form.watch("videoUrl")}
-          disabled={isLoading}
-          type="text"
-        />
-        {form.watch("videoUrl") && (
-          <div className="min-w-full flex items-center justify-center overflow-hidden max-h-[300px] min-h-[300px] bg-black border-[1px] border-red-700 rounded-lg drop-shadow-2xl ">
-            <video
-              src={form.watch("videoUrl")}
-              poster={form.watch("thumbnailUrl")}
-              autoPlay
-              muted
-              loop
-              className="min-w-full min-h-[300px] max-h-[300px] object-cover brightness-[60%]"
-            ></video>
-          </div>
-        )}
-        <Input
-          label="genre"
-          name="genre"
-          onChange={(e) => form.setValue("genre", e.target.value)}
-          register={form.register("genre")}
-          value={form.watch("genre")}
-          disabled={isLoading}
-          type="text"
-        />
-        <Input
-          label="duration"
-          name="duration"
-          onChange={(e) => form.setValue("duration", e.target.value)}
-          register={form.register("duration")}
-          value={form.watch("duration")}
-          disabled={isLoading}
-          type="text"
-        />
-        <Input
-          label="seasons"
-          name="seasons"
-          onChange={(e) =>
-            form.setValue(
-              "seasons",
-              isNaN(+e.target.value) ? "" : e.target.value
-            )
-          }
-          register={form.register("seasons")}
-          value={form.watch("seasons") as any}
-          disabled={isLoading}
-          type="number"
-        />
-        <Input
-          label="epizodes"
-          name="epizodes"
-          onChange={(e) =>
-            form.setValue(
-              "epizodes",
-              isNaN(+e.target.value) ? "" : e.target.value
-            )
-          }
-          register={form.register("epizodes")}
-          value={form.watch("epizodes") as any}
-          disabled={isLoading}
-          type="number"
-        />
-        <div className="min-w-full flex flex-col md:flex-row items-center justify-start gap-3">
-          <button
-            className="capitalize text-white border-[1px] border-red-600 hover:opacity-80 bg-red-600 px-3 rounded-lg py-2 drop-shadow-2xl hover:bg-opacity-90 transition-all disabled:cursor-not-allowed disabled:opacity-50 "
-            type="submit"
-            disabled={isLoading}
-          >
-            submit
-          </button>
-          <button
-            className="hover:opacity-80 transition-all border-[1px] border-white text-white bg-transparent px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed  rounded-lg drop-shadow-2xl hover:bg-opacity-90"
-            onClick={() => form.reset()}
-            disabled={isLoading}
-          >
-            Reset
-          </button>
-        </div>
       </form>
     </Modal>
   );

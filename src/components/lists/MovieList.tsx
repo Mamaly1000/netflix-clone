@@ -1,25 +1,21 @@
 import React from "react";
 import { Movie } from "@prisma/client";
 import { isEmpty } from "lodash";
-import MovieCard from "../cards/MovieCard";
-import { useCreateMovieModal } from "@/hooks/useCreateMovieModal";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import MovieCard from "../cards/MovieCard"; 
 import { twMerge } from "tailwind-merge";
+import Loader from "../ui/Loader";
 
 const MovieList = ({
   data,
   title,
-  adminMode = false,
   className,
 }: {
   className?: string;
-  adminMode?: boolean;
   data: Movie[];
   title?: string;
 }) => {
-  const { onOpen } = useCreateMovieModal();
   if (isEmpty(data)) {
-    return null;
+    return <Loader message="Loading Movies" />;
   }
   return (
     <section
@@ -32,16 +28,6 @@ const MovieList = ({
         {data.map((movie) => {
           return <MovieCard key={movie.id} movie={movie} />;
         })}
-        {adminMode && (
-          <div
-            className="cursor-pointer group hover:border-red-700 col-span-1 min-h-[150px] border-[1px] border-white border-dotted rounded-lg  flex items-center justify-center "
-            onClick={() => onOpen()}
-          >
-            <button className="p-5 rounded-full flex items-center justify-center drop-shadow-2xl transition-all bg-transparent  group-hover:bg-red-700 border-[1px] border-white group-hover:border-red-700 w-20 h-20 max-h-20 max-w-20 m-auto">
-              <PlusIcon className="text-white" />
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );

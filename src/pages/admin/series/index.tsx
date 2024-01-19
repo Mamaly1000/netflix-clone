@@ -5,13 +5,14 @@ import SideBar from "@/components/sidebar/SideBar";
 import CustomBillBoard from "@/components/ui/CustomBillBoard";
 import Header from "@/components/ui/Header";
 import useBillboard from "@/hooks/useBillboard";
+import { useCreateSeriesModal } from "@/hooks/useCreateSeriesModal";
 import useSeries from "@/hooks/useSeries";
 import { useSeriesInfoModal } from "@/hooks/useSeriesInfoModal";
 import { useSideBar } from "@/hooks/useSideBar";
 import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
-import { BiSidebar } from "react-icons/bi";
+import { BiAddToQueue, BiSidebar } from "react-icons/bi";
 export const getServerSideProps = async (ctx: NextPageContext) => {
   const session = await getSession(ctx);
   if (!session) {
@@ -30,6 +31,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
 const SeriesPage = () => {
   const { billboard } = useBillboard({ type: "series" });
   const { series } = useSeries();
+  const createSreisModal = useCreateSeriesModal();
   const { onOpen } = useSeriesInfoModal();
   const SideBarModal = useSideBar();
 
@@ -44,13 +46,18 @@ const SeriesPage = () => {
             id: 0,
             onClick: () => SideBarModal.onOpen(),
           },
+          {
+            id: 1,
+            onClick: () => createSreisModal.onOpen(),
+            icon: BiAddToQueue,
+          },
         ]}
       />
       <CreateSeries />
       <SeriesInfoModal adminMode />
       <CustomBillBoard billboard={billboard} onOpen={onOpen} type="series" />
       <SideBar isOpen={SideBarModal.isOpen} onClose={SideBarModal.onClose} />
-      <SeriesList adminMode data={series || []} title="Trending Series" />
+      <SeriesList className="pb-40" data={series || []} title="Trending Series" />
     </>
   );
 };

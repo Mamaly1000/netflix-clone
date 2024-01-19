@@ -28,7 +28,7 @@ const EditButton = ({ type, id }: { type: "movie" | "series"; id: string }) => {
     <button
       onClick={handleUpdate}
       className={twMerge(
-        "cursor-pointer group/item w-6 h-6 lg:w-10 lg:h-10 text-yellow-500   border-yellow-500 border-2 rounded-full flex justify-center items-center transition  "
+        "cursor-pointer group/item min-w-10 min-h-10 text-yellow-500   border-yellow-500 border-2 rounded-full flex justify-center items-center transition  "
       )}
     >
       <PencilIcon className="w-5 h-5 " />

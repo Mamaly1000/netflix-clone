@@ -7,35 +7,15 @@ import { IoNotificationsOffOutline } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 import { useCreateUserModal } from "@/hooks/useCteateUser";
 import { BiAddToQueue } from "react-icons/bi";
+import Loader from "../ui/Loader";
 
-const UsersList = ({
-  data = [],
-  title,
-  create = false,
-}: {
-  create?: boolean;
-  data: User[];
-  title: string;
-}) => {
+const UsersList = ({ data = [], title }: { data: User[]; title: string }) => {
   const { onOpen } = useCreateUserModal();
 
   return (
     <section className="px-4 md:px-12 mt-4 space-y-8  pb-40  min-w-full flex flex-col items-start justify-start max-w-full overflow-hidden">
       <p className="min-w-full text-white text-base md:text-lg lg:text-2xl font-semibold mb-4  capitalize flex items-center justify-between">
         {title}
-        {create && (
-          <button
-            className="w-14 h-14 rounded-full border-[1px] border-white text-white flex items-center justify-center hover:text-red-700 hover:border-red-700 transition-all"
-            onClick={() =>
-              onOpen({
-                id: undefined,
-                type: "create",
-              })
-            }
-          >
-            <BiAddToQueue />
-          </button>
-        )}
       </p>
       <div className="flex flex-col items-start justify-start gap-2 min-w-full max-w-full overflow-auto  ">
         <div className="min-w-[900px] md:min-w-full flex items-center justify-start gap-3 bg-zinc-800 text-white capitalize font-semibold [&>span]:min-w-[20%] p-5 text-lg">
@@ -105,9 +85,7 @@ const UsersList = ({
             );
           })
         ) : (
-          <div className="min-w-full p-5 capitalize text-lg text-white bg-zinc-800 flex items-center justify-center">
-            no data
-          </div>
+          <Loader message="Loading Users" />
         )}
       </div>
     </section>

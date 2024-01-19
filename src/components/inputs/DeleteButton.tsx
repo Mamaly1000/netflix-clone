@@ -72,7 +72,7 @@ const DeleteButton = ({
       disabled={isLoading}
       onClick={onDelete}
       className={twMerge(
-        "cursor-pointer group/item w-6 h-6 lg:w-10 lg:h-10 text-white hover:text-red-700 hover:border-red-700 border-white border-2 rounded-full flex justify-center items-center transition  ",
+        "cursor-pointer group/item min-w-10 min-h-10 text-white hover:text-red-700 hover:border-red-700 border-white border-2 rounded-full flex justify-center items-center transition  ",
         isLoading ? "animate-pulse" : ""
       )}
     >

@@ -29,10 +29,19 @@ const ProfileCard = ({
   const ParentRef: LegacyRef<HTMLDivElement> | undefined = useRef(null);
 
   useEffect(() => {
+    const dynanamicHeight = () => {
+      if (ParentRef.current?.scrollHeight) {
+        setHeight(+ParentRef.current?.scrollHeight || 500);
+      }
+    };
     if (ParentRef.current?.scrollHeight) {
       setHeight(+ParentRef.current?.scrollHeight || 500);
     }
-  }, [ParentRef,window]);
+    window.addEventListener("resize", dynanamicHeight);
+    return () => {
+      window.removeEventListener("resize", dynanamicHeight);
+    };
+  }, [ParentRef, window]);
 
   return (
     <div className="min-w-full flex-col items-start justify-start gap-3 p-5 ">

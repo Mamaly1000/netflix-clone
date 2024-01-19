@@ -6,7 +6,7 @@ import DeleteNewsButton from "../inputs/DeleteNewsButton";
 import { FaEdit } from "react-icons/fa";
 import { useCreateNews } from "@/hooks/useCreateNews";
 import { useNewsInfoModal } from "@/hooks/useNewsInfoModal";
-import { twMerge } from "tailwind-merge"; 
+import { twMerge } from "tailwind-merge";
 import { IoMdClose } from "react-icons/io";
 import { formatDistanceToNowStrict } from "date-fns";
 import { CalendarIcon } from "@heroicons/react/24/outline";
@@ -65,12 +65,13 @@ const NewsCard = ({
               <>
                 <DeleteNewsButton id={news.id} />
                 <button
-                  onClick={() =>
+                  onClick={(e) => {
+                    e.stopPropagation();
                     createNewsModal.onOpen({
                       id: news.id,
                       type: "update",
-                    })
-                  }
+                    });
+                  }}
                   className="text-yellow-400 w-10 h-10 rounded-full bg-zinc-800 bg-opacity-80 flex items-center justify-center"
                 >
                   <FaEdit />
@@ -132,7 +133,7 @@ const NewsCard = ({
               {news.description}
             </p>
             <div>
-              <div className="min-w-full flex items-center justify-start gap-3 text-[12px] text-slate-300 py-3">
+              <div className="min-w-full flex flex-wrap items-center justify-start gap-3 text-[12px] text-slate-300 py-3">
                 {news.updatedAt && (
                   <span className="flex items-center gap-1">
                     <CalendarIcon className="w-3 h-3" />
@@ -140,7 +141,7 @@ const NewsCard = ({
                   </span>
                 )}
                 {!!news.tags.length && (
-                  <div className="  uppercase flex flex-wrap items-start justify-start gap-2">
+                  <div className="  uppercase w-fit max-w-[70%] flex flex-wrap items-start justify-start gap-2">
                     {news.tags.map((tag) => (
                       <span
                         key={tag}

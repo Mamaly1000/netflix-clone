@@ -14,6 +14,8 @@ import { IoLogOut } from "react-icons/io5";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
 import { useProfileModal } from "@/hooks/useProfileModal";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { BiNotification } from "react-icons/bi";
 
 const TOP_OFFSET = 66;
 
@@ -114,10 +116,16 @@ const Navbar = () => {
           </Menu>
         </div>
         <div className="flex flex-row ml-auto gap-7 items-center">
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition-all">
+          <div
+            onClick={() => toast.error("comming soon")}
+            className="text-gray-200  hover:text-gray-300 cursor-pointer transition-all"
+          >
             <BsSearch size={14} />
           </div>{" "}
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition-all">
+          <div
+            onClick={() => toast.error("comming soon")}
+            className="text-gray-200 hover:text-gray-300 cursor-pointer transition-all"
+          >
             <BsBell size={14} />
           </div>
           <div

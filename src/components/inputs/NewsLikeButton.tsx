@@ -53,7 +53,10 @@ const NewsLikeButton = ({
 
   return (
     <button
-      onClick={toggleFavorites}
+      onClick={(e) => {
+        e.stopPropagation();
+        toggleFavorites();
+      }}
       className={twMerge(
         "min-w-10 min-h-10 max-w-10 max-h-10 rounded-full bg-zinc-800 bg-opacity-80 hover:scale-105 transition-all active:scale-90 drop-shadow-2xl flex items-center justify-center",
         isFavorite
