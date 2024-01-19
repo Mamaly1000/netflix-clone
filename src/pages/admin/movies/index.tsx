@@ -8,9 +8,25 @@ import useBillboard from "@/hooks/useBillboard";
 import { useInfoModal } from "@/hooks/useInfoModal";
 import useMovies from "@/hooks/useMovies";
 import { useSideBar } from "@/hooks/useSideBar";
+import { NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import React from "react";
 import { BiSidebar } from "react-icons/bi";
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const session = await getSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
 
+  return {
+    props: {},
+  };
+};
 const MoviesPage = () => {
   const { billboard } = useBillboard({ type: "movie" });
   const { movies } = useMovies();

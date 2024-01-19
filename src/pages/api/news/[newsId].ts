@@ -40,6 +40,7 @@ export default async function hanlder(
               id: newsId,
             },
           });
+          return res.status(200).json({ message: "news deleted!" });
         }
       }
       if (req.method === "PATCH") {

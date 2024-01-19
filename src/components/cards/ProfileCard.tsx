@@ -1,4 +1,4 @@
-import { Movie, User, series } from "@prisma/client";
+import { Movie, News, User, series } from "@prisma/client";
 import Image from "next/image";
 import React, { LegacyRef, useEffect, useRef, useState } from "react";
 import blue from "@/public/images/default-blue.png";
@@ -9,12 +9,15 @@ import { BiEdit } from "react-icons/bi";
 import { PiSignOut } from "react-icons/pi";
 import { useProfileModal } from "@/hooks/useProfileModal";
 import { signOut } from "next-auth/react";
+import NewsList from "../lists/NewsList";
 
 const ProfileCard = ({
   user,
   movies,
   series,
+  news,
 }: {
+  news?: News[] | null;
   user: User;
   movies?: Movie[] | null;
   series?: series[] | null;
@@ -29,7 +32,7 @@ const ProfileCard = ({
     if (ParentRef.current?.scrollHeight) {
       setHeight(+ParentRef.current?.scrollHeight || 500);
     }
-  }, [ParentRef]);
+  }, [ParentRef,window]);
 
   return (
     <div className="min-w-full flex-col items-start justify-start gap-3 p-5 ">
@@ -81,6 +84,7 @@ const ProfileCard = ({
         >
           <MovieList data={movies || []} title="Your Favorites Movies" />
           <SeriesList data={series || []} title="Your Favorites Series" />
+          <NewsList news={news || []} title="Your Favorite News" />
         </div>
       </div>
     </div>

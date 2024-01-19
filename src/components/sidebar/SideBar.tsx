@@ -1,11 +1,11 @@
 import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { BiMoviePlay, BiUser } from "react-icons/bi";
+import { BiHome, BiMoviePlay, BiUser } from "react-icons/bi";
 import { BsNewspaper } from "react-icons/bs";
 import { FaUsersCog } from "react-icons/fa";
 import { PiFilmReel } from "react-icons/pi";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import useUser from "@/hooks/useUser";
 import toast from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
@@ -13,7 +13,12 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 
 export const sideBarLinks = [
   {
-    href: "/",
+    icon: BiHome,
+    label: "Home",
+    onClick: (router: NextRouter) => router.push("/"),
+  },
+  {
+    href: "",
     icon: BiUser,
     label: "profile",
   },
@@ -37,7 +42,12 @@ export const sideBarLinks = [
     href: "/news",
     icon: BsNewspaper,
   },
-] as { label: string; href: string; icon: any }[];
+] as {
+  label: string;
+  href?: string;
+  icon: any;
+  onClick?: (router?: NextRouter) => void;
+}[];
 
 const SideBar = ({
   isOpen,
@@ -65,7 +75,7 @@ const SideBar = ({
         toast.error("unAuthorized");
         router.push("/");
       }
-      router.push(`/admin/${href}`);
+      router.push(`/admin${href}`);
     },
     [user, isLoading]
   );
@@ -99,7 +109,7 @@ const SideBar = ({
         )}
       >
         <h3 className="text-2xl capitalize h-14 flex items-center justify-start md:h-fit">
-          Where do you want to go?
+          dashboard
         </h3>
         <button
           className="absolute end-5 top-5 w-14 h-14 rounded-full flex items-center justify-center border-[1px] border-white hover:border-red-700 hover:text-red-700 transition-all md:hidden"
@@ -109,27 +119,35 @@ const SideBar = ({
         </button>
         <hr className="bg-zinc-800 min-w-full min-h-[1px] max-h-[1px] border-red-700" />
         <div className="min-w-full text-xl flex flex-col items-start justify-start gap-3 min-h-fit">
-          {sideBarLinks.map(({ label, href, icon: Icon }) => {
-            return (
-              <div
-                key={href}
-                onClick={() => clickHandler(href)}
-                className={twMerge(
-                  pathName.includes(label) ? "text-red-700" : "",
-                  "min-w-full cursor-pointer hover:text-red-700 transition-all flex items-center justify-between gap-3 capitalize font-semibold"
-                )}
-              >
-                <span
+          {sideBarLinks.map(
+            ({ onClick: linkOnClick, label, href, icon: Icon }) => {
+              return (
+                <div
+                  key={href}
+                  onClick={() => {
+                    if (linkOnClick) {
+                      linkOnClick(router);
+                    } else if (href) {
+                      clickHandler(href);
+                    }
+                  }}
                   className={twMerge(
-                    pathName.includes(label) ? "text-red-700" : ""
+                    pathName.includes(label) ? "text-red-700" : "",
+                    "min-w-full cursor-pointer hover:text-red-700 transition-all flex items-center justify-between gap-3 capitalize  "
                   )}
                 >
-                  {label}
-                </span>
-                <Icon size={30} />
-              </div>
-            );
-          })}
+                  <span
+                    className={twMerge(
+                      pathName.includes(label) ? "text-red-700" : ""
+                    )}
+                  >
+                    {label}
+                  </span>
+                  <Icon size={30} />
+                </div>
+              );
+            }
+          )}
         </div>
       </div>
     </div>

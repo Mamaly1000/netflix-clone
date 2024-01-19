@@ -5,9 +5,25 @@ import SideBar from "@/components/sidebar/SideBar";
 import Header from "@/components/ui/Header";
 import { useSideBar } from "@/hooks/useSideBar";
 import useUsers from "@/hooks/useUsers";
+import { NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import React from "react";
 import { BiSidebar } from "react-icons/bi";
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const session = await getSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
 
+  return {
+    props: {},
+  };
+};
 const UsersPage = () => {
   const { data } = useUsers();
   const SideBarModal = useSideBar();

@@ -8,9 +8,25 @@ import useBillboard from "@/hooks/useBillboard";
 import useSeries from "@/hooks/useSeries";
 import { useSeriesInfoModal } from "@/hooks/useSeriesInfoModal";
 import { useSideBar } from "@/hooks/useSideBar";
+import { NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import React from "react";
 import { BiSidebar } from "react-icons/bi";
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const session = await getSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
 
+  return {
+    props: {},
+  };
+};
 const SeriesPage = () => {
   const { billboard } = useBillboard({ type: "series" });
   const { series } = useSeries();

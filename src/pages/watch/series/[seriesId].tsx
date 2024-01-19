@@ -1,8 +1,24 @@
 import useSingleSeries from "@/hooks/useSingleSeries";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const session = await getSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth",
+        permanent: false,
+      },
+    };
+  }
 
+  return {
+    props: {},
+  };
+};
 const SeriesSinglePage = () => {
   const router = useRouter();
   const { seriesId } = router.query;
