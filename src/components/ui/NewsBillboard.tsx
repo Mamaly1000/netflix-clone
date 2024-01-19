@@ -80,7 +80,10 @@ const NewsBillboard = ({
       <div className="min-w-full lg:min-w-[25%] lg:max-w-[25%] pt-28 sm:pt-24 lg:pt-0  min-h-[400px] flex flex-col gap-3">
         {subNews?.map((news) => {
           return (
-            <article className="min-w-full flex flex-col sm:flex-row items-center lg:justify-between gap-5 sm:gap-2 text-white bg-transparent">
+            <article
+              key={news.id}
+              className="min-w-full flex flex-col sm:flex-row items-center lg:justify-between gap-5 sm:gap-2 text-white bg-transparent"
+            >
               <Image
                 width={100}
                 height={100}
@@ -105,7 +108,7 @@ const NewsBillboard = ({
                   {!!news.tags.length &&
                     news.tags.slice(0, 1).map((tag, i, tags) => (
                       <span
-                        key={tag}
+                        key={tag + i}
                         className="px-2 py-1 text-[10px] bg-red-700 text-white rounded-lg drop-shadow-2xl"
                       >
                         {tag}

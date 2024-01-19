@@ -50,7 +50,7 @@ const UserCard = ({ name }: { name: string }) => {
   );
 };
 
-const profiles = () => {
+const Profiles = () => {
   const router = useRouter();
   const { user } = useCurrentUser();
 
@@ -73,4 +73,4 @@ const profiles = () => {
   );
 };
 
-export default profiles;
+export default Profiles;
